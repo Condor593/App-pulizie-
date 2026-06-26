@@ -17,13 +17,16 @@ export default function LoginPage({ onLoginSuccess }) {
     const { data, error: dbError } = await supabase
       .from('collaboratori')
       .select('email')
-      .eq('email', normalized)
+      .ilike('email', normalized)
       .maybeSingle()
+
+    console.log('[Login] normalized:', normalized, '| data:', data, '| error:', dbError)
 
     setLoading(false)
 
     if (dbError) {
-      setError('Errore di connessione. Riprova.')
+      console.error('[Login] DB error:', dbError)
+      setError(`Errore: ${dbError.message}`)
       return
     }
 
